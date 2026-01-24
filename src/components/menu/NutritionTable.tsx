@@ -6,41 +6,65 @@ interface NutritionTableProps {
   nutrition: NutritionalData
 }
 
-const NUTRIENTS = [
-  { key: 'calories', label: 'Calories', unit: '' },
+const NUTRIENTS: Array<{ key: string; label: string; unit: string; highlight?: boolean }> = [
+  { key: 'calories', label: 'Calories', unit: '', highlight: true },
+  { key: 'protein', label: 'Protein', unit: 'g', highlight: true },
   { key: 'carbs', label: 'Carbohydrates', unit: 'g' },
   { key: 'sugar', label: 'Sugar', unit: 'g' },
-  { key: 'protein', label: 'Protein', unit: 'g' },
   { key: 'fat', label: 'Total Fat', unit: 'g' },
   { key: 'saturated_fat', label: 'Saturated Fat', unit: 'g' },
   { key: 'fiber', label: 'Fiber', unit: 'g' },
   { key: 'sodium', label: 'Sodium', unit: 'mg' },
   { key: 'cholesterol', label: 'Cholesterol', unit: 'mg' },
-] as const
+]
 
 export default function NutritionTable({ nutrition }: NutritionTableProps) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">Nutrition Facts</h3>
-        {nutrition.confidence_score < 70 && (
-          <span className="text-sm text-orange-500 bg-orange-50 px-2 py-1 rounded">
-            Estimated
-          </span>
-        )}
+    <div className="bg-white rounded-xl shadow-md overflow-hidden">
+      {/* Header */}
+      <div className="bg-park-soft px-6 py-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-bold text-park-blue">Nutrition Facts</h3>
+          {nutrition.confidence_score < 70 && (
+            <span className="text-sm text-park-orange bg-park-orange/10 px-3 py-1 rounded-full font-medium">
+              Estimated
+            </span>
+          )}
+        </div>
+        <div className="text-sm text-park-slate/60 mt-1 capitalize">
+          Source: {nutrition.source.replace('_', ' ')}
+        </div>
       </div>
-      <div className="text-xs text-gray-500 mb-4">
-        Source: {nutrition.source.replace('_', ' ')}
+
+      {/* Confidence Bar */}
+      <div className="px-6 py-3 border-b border-park-soft">
+        <div className="flex items-center justify-between text-sm mb-1">
+          <span className="text-park-slate/70">Data Confidence</span>
+          <span className="font-medium text-park-blue">{nutrition.confidence_score}%</span>
+        </div>
+        <div className="h-2 bg-park-soft rounded-full overflow-hidden">
+          <div
+            className="h-full bg-park-gold rounded-full transition-all"
+            style={{ width: `${nutrition.confidence_score}%` }}
+          />
+        </div>
       </div>
+
+      {/* Table */}
       <table className="w-full">
         <tbody>
-          {NUTRIENTS.map(({ key, label, unit }) => {
+          {NUTRIENTS.map(({ key, label, unit, highlight }, idx) => {
             const value = nutrition[key as keyof NutritionalData]
             if (value === null) return null
             return (
-              <tr key={key} className="border-b border-gray-100 last:border-0">
-                <td className="py-2 text-gray-700">{label}</td>
-                <td className="py-2 text-right font-medium text-gray-900">
+              <tr
+                key={key}
+                className={idx % 2 === 0 ? 'bg-white' : 'bg-park-cream/50'}
+              >
+                <td className={`px-6 py-3 text-park-slate ${highlight ? 'font-medium' : ''}`}>
+                  {label}
+                </td>
+                <td className={`px-6 py-3 text-right ${highlight ? 'font-bold text-park-blue' : 'font-medium text-park-slate'}`}>
                   {value}{unit}
                 </td>
               </tr>

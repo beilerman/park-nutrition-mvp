@@ -29,7 +29,7 @@ export default function Park() {
 
   if (error) {
     return (
-      <div className="text-red-600">
+      <div className="bg-park-red/10 border border-park-red/20 rounded-xl p-6 text-park-red">
         Error loading restaurants: {error.message}
       </div>
     )
@@ -37,20 +37,28 @@ export default function Park() {
 
   return (
     <div>
-      <nav className="text-sm text-gray-500 mb-4">
-        <Link to="/" className="hover:text-gray-700">Parks</Link>
-        <span className="mx-2">/</span>
-        <span className="text-gray-900">{park?.name ?? 'Loading...'}</span>
+      {/* Breadcrumb */}
+      <nav className="text-sm mb-6">
+        <Link to="/" className="text-park-blue hover:text-park-gold transition-colors">
+          ← Back to Parks
+        </Link>
       </nav>
 
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">
-        {park?.name ?? 'Loading...'}
-      </h1>
-      {park?.location && (
-        <p className="text-gray-600 mb-6">{park.location}</p>
-      )}
+      {/* Hero Section */}
+      <div className="bg-gradient-to-br from-park-blue to-park-blue/80 rounded-2xl p-8 mb-8 text-white">
+        <h1 className="text-3xl font-bold mb-2">
+          {park?.name ?? 'Loading...'}
+        </h1>
+        {park?.location && (
+          <p className="text-white/80 flex items-center gap-2">
+            <span>📍</span>
+            {park.location}
+          </p>
+        )}
+      </div>
 
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">Restaurants</h2>
+      {/* Restaurants Section */}
+      <h2 className="text-2xl font-bold text-park-blue mb-6">Restaurants</h2>
       <RestaurantList restaurants={restaurants} isLoading={isLoading} />
     </div>
   )

@@ -1,3 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-park-blue: #1e3a5f;
+  --color-park-gold: #f5a623;
+  --color-park-red: #d64545;
+  --color-park-cream: #faf8f5;
+  --color-park-soft: #e8f0f8;
+  --color-park-slate: #2d3748;
+  --color-park-orange: #e67e22;
+}
+
+body {
+  background-color: var(--color-park-cream);
+  color: var(--color-park-slate);
+}

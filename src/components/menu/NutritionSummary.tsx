@@ -9,25 +9,24 @@ interface NutritionSummaryProps {
 
 export default function NutritionSummary({ nutrition, showConfidence }: NutritionSummaryProps) {
   if (!nutrition) {
-    return <div className="text-gray-400 text-sm">No nutrition data</div>
+    return (
+      <span className="inline-block px-3 py-1 bg-park-soft/50 text-park-slate/50 text-sm rounded-full">
+        No nutrition data
+      </span>
+    )
   }
 
+  const parts: string[] = []
+  if (nutrition.calories !== null) parts.push(`${nutrition.calories} cal`)
+  if (nutrition.protein !== null) parts.push(`${nutrition.protein}g protein`)
+
   return (
-    <div className="flex items-center gap-4 text-sm">
-      {nutrition.calories !== null && (
-        <span className="font-medium">{nutrition.calories} cal</span>
-      )}
-      {nutrition.carbs !== null && (
-        <span className="text-gray-600">{nutrition.carbs}g carbs</span>
-      )}
-      {nutrition.protein !== null && (
-        <span className="text-gray-600">{nutrition.protein}g protein</span>
-      )}
-      {nutrition.fat !== null && (
-        <span className="text-gray-600">{nutrition.fat}g fat</span>
-      )}
+    <div className="flex items-center gap-2 flex-wrap">
+      <span className="inline-block px-3 py-1 bg-park-soft text-park-blue text-sm font-medium rounded-full">
+        {parts.join(' · ')}
+      </span>
       {showConfidence && nutrition.confidence_score < 70 && (
-        <span className="text-orange-500 text-xs">(estimated)</span>
+        <span className="text-park-orange text-xs font-medium">(estimated)</span>
       )}
     </div>
   )

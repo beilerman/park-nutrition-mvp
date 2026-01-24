@@ -13,17 +13,24 @@ export default function AllergenBadges({ allergens }: AllergenBadgesProps) {
   const mayContain = allergens.filter(a => a.severity === 'may_contain')
 
   return (
-    <div className="text-sm">
-      {contains.length > 0 && (
-        <div className="text-red-600">
-          Contains: {contains.map(a => a.allergen_type).join(', ')}
-        </div>
-      )}
-      {mayContain.length > 0 && (
-        <div className="text-orange-500">
-          May contain: {mayContain.map(a => a.allergen_type).join(', ')}
-        </div>
-      )}
+    <div className="flex flex-wrap gap-2 text-sm">
+      {contains.map((a) => (
+        <span
+          key={a.id}
+          className="inline-flex items-center gap-1 px-2 py-0.5 bg-park-red/10 text-park-red font-medium rounded-full"
+        >
+          <span className="text-xs">⚠️</span>
+          {a.allergen_type}
+        </span>
+      ))}
+      {mayContain.map((a) => (
+        <span
+          key={a.id}
+          className="inline-flex items-center gap-1 px-2 py-0.5 bg-park-orange/10 text-park-orange font-medium rounded-full"
+        >
+          {a.allergen_type}
+        </span>
+      ))}
     </div>
   )
 }

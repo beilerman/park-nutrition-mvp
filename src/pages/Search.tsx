@@ -1,4 +1,6 @@
-import { useSearchParams } from 'react-router-dom'
+// src/pages/Search.tsx
+
+import { useSearchParams, Link } from 'react-router-dom'
 import { useSearch } from '../lib/queries'
 import MenuItemCard from '../components/menu/MenuItemCard'
 
@@ -24,31 +26,70 @@ export default function Search() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">
-        Search Results
-      </h1>
-      {query && (
-        <p className="text-gray-600 mb-6">
-          {results.length} results for "{query}"
-        </p>
-      )}
+      {/* Hero Section */}
+      <div className="bg-gradient-to-br from-park-blue to-park-blue/80 rounded-2xl p-8 mb-8 text-white">
+        <h1 className="text-3xl font-bold mb-2">
+          Search Results
+        </h1>
+        {query && (
+          <p className="text-white/80">
+            {isLoading ? 'Searching...' : `${results.length} results for "${query}"`}
+          </p>
+        )}
+      </div>
 
       {!query ? (
-        <div className="text-gray-500">Enter a search term to find menu items.</div>
+        <div className="bg-park-soft rounded-xl p-8 text-center">
+          <span className="text-4xl mb-3 block">🔍</span>
+          <p className="text-park-slate/70">Enter a search term to find menu items.</p>
+        </div>
       ) : isLoading ? (
-        <div className="text-gray-500">Searching...</div>
+        <div className="space-y-8">
+          {[1, 2].map((i) => (
+            <div key={i}>
+              <div className="h-7 bg-park-soft rounded w-48 mb-4" />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {[1, 2].map((j) => (
+                  <div key={j} className="bg-white rounded-xl shadow-md p-5 animate-pulse">
+                    <div className="flex gap-4">
+                      <div className="w-24 h-24 bg-park-soft rounded-lg" />
+                      <div className="flex-1">
+                        <div className="h-5 bg-park-soft rounded w-3/4 mb-2" />
+                        <div className="h-4 bg-park-soft rounded w-full mb-2" />
+                        <div className="h-6 bg-park-soft rounded-full w-32" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       ) : error ? (
-        <div className="text-red-600">Error: {error.message}</div>
+        <div className="bg-park-red/10 border border-park-red/20 rounded-xl p-6 text-park-red">
+          Error: {error.message}
+        </div>
       ) : results.length === 0 ? (
-        <div className="text-gray-500">No items found matching "{query}".</div>
+        <div className="bg-park-soft rounded-xl p-8 text-center">
+          <span className="text-4xl mb-3 block">😕</span>
+          <p className="text-park-slate/70 mb-2">No items found matching "{query}".</p>
+          <Link to="/" className="text-park-blue hover:text-park-gold transition-colors font-medium">
+            Browse all parks
+          </Link>
+        </div>
       ) : (
         <div className="space-y-8">
           {Object.values(groupedResults).map(({ restaurant, items }) => (
             <div key={restaurant?.id || 'unknown'}>
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                {restaurant?.name || 'Unknown Restaurant'}
+              <h2 className="text-xl font-bold text-park-blue mb-4 flex items-center gap-2">
+                <Link
+                  to={restaurant ? `/restaurants/${restaurant.id}` : '#'}
+                  className="hover:text-park-gold transition-colors"
+                >
+                  {restaurant?.name || 'Unknown Restaurant'}
+                </Link>
                 {restaurant?.park && (
-                  <span className="text-gray-500 font-normal text-base ml-2">
+                  <span className="text-park-slate/50 font-normal text-base">
                     at {restaurant.park.name}
                   </span>
                 )}
