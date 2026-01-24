@@ -14,6 +14,6 @@ describe('App', () => {
         <App />
       </QueryClientProvider>
     )
-    expect(screen.getByText('Home Page')).toBeInTheDocument()
+    expect(screen.getByText('Select a Park')).toBeInTheDocument()
   })
 })

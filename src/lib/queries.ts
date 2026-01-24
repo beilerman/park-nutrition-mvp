@@ -62,7 +62,8 @@ export function useMenuItems(restaurantId: string | undefined, filters?: Filters
 
       if (filters?.maxCalories !== undefined) {
         items = items.filter(item =>
-          item.nutritional_data?.calories !== null &&
+          item.nutritional_data &&
+          item.nutritional_data.calories !== null &&
           item.nutritional_data.calories <= filters.maxCalories!
         )
       }
@@ -128,7 +129,8 @@ export function useSearch(query: string, filters?: Filters) {
 
       if (filters?.maxCalories !== undefined) {
         items = items.filter(item =>
-          item.nutritional_data?.calories !== null &&
+          item.nutritional_data &&
+          item.nutritional_data.calories !== null &&
           item.nutritional_data.calories <= filters.maxCalories!
         )
       }
