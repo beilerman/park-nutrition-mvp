@@ -1,23 +1,19 @@
 // src/pages/Restaurant.tsx
 
-import { useParams, Link, useSearchParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
 import { useMenuItems } from '../lib/queries'
+import { useFilters } from '../hooks/useFilters'
 import MenuItemCard from '../components/menu/MenuItemCard'
-import type { Restaurant as RestaurantType, Filters } from '../lib/types'
+import FilterSidebar from '../components/filters/FilterSidebar'
+import type { Restaurant as RestaurantType } from '../lib/types'
 
 const CATEGORIES = ['entree', 'snack', 'beverage', 'dessert', 'side'] as const
 
 export default function Restaurant() {
   const { id } = useParams<{ id: string }>()
-  const [searchParams, setSearchParams] = useSearchParams()
-
-  const category = searchParams.get('category') as Filters['category'] | null
-
-  const filters: Filters = {
-    category: category || undefined,
-  }
+  const { filters, setFilter, clearFilters } = useFilters()
 
   const { data: restaurant } = useQuery({
     queryKey: ['restaurant', id],
@@ -35,15 +31,6 @@ export default function Restaurant() {
   })
 
   const { data: menuItems = [], isLoading, error } = useMenuItems(id, filters)
-
-  const handleCategoryChange = (newCategory: string | null) => {
-    if (newCategory) {
-      searchParams.set('category', newCategory)
-    } else {
-      searchParams.delete('category')
-    }
-    setSearchParams(searchParams)
-  }
 
   if (error) {
     return (
@@ -81,9 +68,9 @@ export default function Restaurant() {
 
       <div className="flex gap-2 mb-6 flex-wrap">
         <button
-          onClick={() => handleCategoryChange(null)}
+          onClick={() => setFilter('category', undefined)}
           className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-            !category
+            !filters.category
               ? 'bg-green-600 text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
@@ -93,9 +80,9 @@ export default function Restaurant() {
         {CATEGORIES.map((cat) => (
           <button
             key={cat}
-            onClick={() => handleCategoryChange(cat)}
+            onClick={() => setFilter('category', cat)}
             className={`px-4 py-2 rounded-full text-sm font-medium capitalize transition-colors ${
-              category === cat
+              filters.category === cat
                 ? 'bg-green-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
@@ -105,17 +92,29 @@ export default function Restaurant() {
         ))}
       </div>
 
-      {isLoading ? (
-        <div className="text-gray-500">Loading menu...</div>
-      ) : menuItems.length === 0 ? (
-        <div className="text-gray-500">No menu items found.</div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {menuItems.map((item) => (
-            <MenuItemCard key={item.id} item={item} />
-          ))}
+      <div className="flex gap-8">
+        <aside className="w-64 flex-shrink-0 hidden lg:block">
+          <FilterSidebar
+            filters={filters}
+            onFilterChange={setFilter}
+            onClear={clearFilters}
+          />
+        </aside>
+
+        <div className="flex-1">
+          {isLoading ? (
+            <div className="text-gray-500">Loading menu...</div>
+          ) : menuItems.length === 0 ? (
+            <div className="text-gray-500">No menu items found matching your filters.</div>
+          ) : (
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              {menuItems.map((item) => (
+                <MenuItemCard key={item.id} item={item} />
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   )
 }
