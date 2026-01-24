@@ -6,10 +6,16 @@ import type { Filters } from '../lib/types'
 export function useFilters() {
   const [searchParams, setSearchParams] = useSearchParams()
 
+  const categoryParam = searchParams.get('category')
+  const validCategories = ['entree', 'snack', 'beverage', 'dessert', 'side'] as const
+  const category = categoryParam && validCategories.includes(categoryParam as typeof validCategories[number])
+    ? (categoryParam as Filters['category'])
+    : undefined
+
   const filters: Filters = {
     maxCalories: searchParams.get('maxCalories') ? Number(searchParams.get('maxCalories')) : undefined,
     excludeAllergens: searchParams.getAll('exclude'),
-    category: searchParams.get('category') as Filters['category'] | undefined,
+    category,
   }
 
   const setFilter = (key: keyof Filters, value: unknown) => {

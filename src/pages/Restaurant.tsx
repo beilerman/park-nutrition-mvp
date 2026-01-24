@@ -1,13 +1,10 @@
 // src/pages/Restaurant.tsx
 
 import { useParams, Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { supabase } from '../lib/supabase'
-import { useMenuItems } from '../lib/queries'
+import { useMenuItems, useRestaurant } from '../lib/queries'
 import { useFilters } from '../hooks/useFilters'
 import MenuItemCard from '../components/menu/MenuItemCard'
 import FilterSidebar from '../components/filters/FilterSidebar'
-import type { Restaurant as RestaurantType } from '../lib/types'
 
 const CATEGORIES = ['entree', 'snack', 'beverage', 'dessert', 'side'] as const
 
@@ -15,21 +12,7 @@ export default function Restaurant() {
   const { id } = useParams<{ id: string }>()
   const { filters, setFilter, clearFilters } = useFilters()
 
-  const { data: restaurant } = useQuery({
-    queryKey: ['restaurant', id],
-    queryFn: async (): Promise<RestaurantType & { park: { id: string; name: string } } | null> => {
-      if (!id) return null
-      const { data, error } = await supabase
-        .from('restaurants')
-        .select('*, park:parks (id, name)')
-        .eq('id', id)
-        .single()
-      if (error) throw error
-      return data
-    },
-    enabled: !!id,
-  })
-
+  const { data: restaurant, isLoading: isRestaurantLoading } = useRestaurant(id)
   const { data: menuItems = [], isLoading, error } = useMenuItems(id, filters)
 
   if (error) {
@@ -56,14 +39,22 @@ export default function Restaurant() {
           </>
         )}
         <span className="mx-2 text-park-slate/40">/</span>
-        <span className="text-park-slate">{restaurant?.name ?? 'Loading...'}</span>
+        {isRestaurantLoading ? (
+          <span className="inline-block h-4 w-24 bg-park-soft rounded animate-pulse" />
+        ) : (
+          <span className="text-park-slate">{restaurant?.name}</span>
+        )}
       </nav>
 
       {/* Hero Section */}
       <div className="bg-park-soft rounded-2xl p-8 mb-8">
-        <h1 className="text-3xl font-bold text-park-blue mb-2">
-          {restaurant?.name ?? 'Loading...'}
-        </h1>
+        {isRestaurantLoading ? (
+          <div className="h-9 w-64 bg-park-blue/10 rounded animate-pulse mb-2" />
+        ) : (
+          <h1 className="text-3xl font-bold text-park-blue mb-2">
+            {restaurant?.name}
+          </h1>
+        )}
         <div className="flex items-center gap-4 flex-wrap">
           {restaurant?.cuisine_type && (
             <span className="inline-block px-3 py-1 bg-park-blue text-white text-sm font-medium rounded-full">

@@ -1,10 +1,18 @@
 // src/pages/Home.tsx
 
-import { useParks } from '../lib/queries'
+import { useParks, useStats } from '../lib/queries'
 import ParkList from '../components/parks/ParkList'
+
+function formatCount(count: number): string {
+  if (count >= 1000) {
+    return `${(count / 1000).toFixed(1)}k+`
+  }
+  return String(count)
+}
 
 export default function Home() {
   const { data: parks = [], isLoading, error } = useParks()
+  const { data: stats } = useStats()
 
   if (error) {
     return (
@@ -48,9 +56,9 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 gap-4 text-left">
             {[
-              { label: 'Parks', value: parks.length || '12+' },
-              { label: 'Menu items', value: '1.2k+' },
-              { label: 'Allergens tracked', value: '14' },
+              { label: 'Parks', value: parks.length || '-' },
+              { label: 'Menu items', value: stats ? formatCount(stats.menuItemCount) : '-' },
+              { label: 'Allergens tracked', value: stats?.allergenTypesCount ?? '-' },
               { label: 'Updated weekly', value: 'Yes' },
             ].map((stat) => (
               <div

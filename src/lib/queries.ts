@@ -3,6 +3,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from './supabase'
 import type { Park, Restaurant, MenuItemWithNutrition, Filters } from './types'
+import {
+  validateParks,
+  validateRestaurants,
+  validateRestaurant,
+  validateMenuItems,
+  validateMenuItem,
+} from './validation'
 
 const DEFAULT_FILTERS_KEY = {
   category: null,
@@ -24,8 +31,15 @@ function getSafeAllergens(allergens: MenuItemWithNutrition['allergens']) {
   return allergens ?? []
 }
 
-function escapeSearchQuery(query: string) {
-  return query.replace(/[%_,]/g, '\\$&')
+function escapeSearchQuery(query: string): string {
+  // Escape special characters for PostgreSQL ILIKE and PostgREST query syntax
+  // 1. Escape backslashes first (must be done before other escapes)
+  // 2. Escape LIKE wildcards: % and _
+  // 3. Escape PostgREST special chars: comma, parentheses, quotes, dots
+  return query
+    .replace(/\\/g, '\\\\')
+    .replace(/[%_]/g, '\\$&')
+    .replace(/[,().'"]/g, '')
 }
 
 export function useParks() {
@@ -37,7 +51,7 @@ export function useParks() {
         .select('*')
         .order('name')
       if (error) throw error
-      return data
+      return validateParks(data)
     },
   })
 }
@@ -53,9 +67,33 @@ export function useRestaurants(parkId: string | undefined) {
         .eq('park_id', parkId)
         .order('name')
       if (error) throw error
-      return data
+      return validateRestaurants(data)
     },
     enabled: !!parkId,
+  })
+}
+
+export interface RestaurantWithPark extends Restaurant {
+  park: { id: string; name: string }
+}
+
+export function useRestaurant(id: string | undefined) {
+  return useQuery({
+    queryKey: ['restaurant', id],
+    queryFn: async (): Promise<RestaurantWithPark | null> => {
+      if (!id) return null
+      const { data, error } = await supabase
+        .from('restaurants')
+        .select('*, park:parks (id, name)')
+        .eq('id', id)
+        .single()
+      if (error) throw error
+      return {
+        ...validateRestaurant(data),
+        park: data.park as { id: string; name: string },
+      }
+    },
+    enabled: !!id,
   })
 }
 
@@ -81,8 +119,8 @@ export function useMenuItems(restaurantId: string | undefined, filters?: Filters
       const { data, error } = await query.order('name')
       if (error) throw error
 
-      // Client-side filtering for nutrition and allergens
-      let items = data as MenuItemWithNutrition[]
+      // Validate and filter
+      let items = validateMenuItems(data)
 
       if (filters?.maxCalories !== undefined) {
         items = items.filter(item =>
@@ -123,7 +161,7 @@ export function useMenuItem(id: string | undefined) {
         .eq('id', id)
         .single()
       if (error) throw error
-      return data as MenuItemWithNutrition
+      return validateMenuItem(data)
     },
     enabled: !!id,
   })
@@ -150,7 +188,7 @@ export function useSearch(query: string, filters?: Filters) {
 
       if (error) throw error
 
-      let items = data as MenuItemWithNutrition[]
+      let items = validateMenuItems(data)
 
       if (filters?.maxCalories !== undefined) {
         items = items.filter(item =>
@@ -172,5 +210,39 @@ export function useSearch(query: string, filters?: Filters) {
       return items
     },
     enabled: query.trim().length > 0,
+  })
+}
+
+export interface Stats {
+  menuItemCount: number
+  allergenTypesCount: number
+}
+
+export function useStats() {
+  return useQuery({
+    queryKey: ['stats'],
+    queryFn: async (): Promise<Stats> => {
+      // Get menu items count
+      const { count: menuItemCount, error: menuError } = await supabase
+        .from('menu_items')
+        .select('*', { count: 'exact', head: true })
+
+      if (menuError) throw menuError
+
+      // Get distinct allergen types count
+      const { data: allergenData, error: allergenError } = await supabase
+        .from('allergens')
+        .select('allergen_type')
+
+      if (allergenError) throw allergenError
+
+      const uniqueAllergens = new Set(allergenData?.map(a => a.allergen_type) ?? [])
+
+      return {
+        menuItemCount: menuItemCount ?? 0,
+        allergenTypesCount: uniqueAllergens.size,
+      }
+    },
+    staleTime: 1000 * 60 * 10, // Cache for 10 minutes
   })
 }
