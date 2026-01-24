@@ -4,6 +4,30 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from './supabase'
 import type { Park, Restaurant, MenuItemWithNutrition, Filters } from './types'
 
+const DEFAULT_FILTERS_KEY = {
+  category: null,
+  maxCalories: null,
+  excludeAllergens: '',
+}
+
+function getFiltersKey(filters?: Filters) {
+  if (!filters) return DEFAULT_FILTERS_KEY
+
+  return {
+    category: filters.category ?? null,
+    maxCalories: filters.maxCalories ?? null,
+    excludeAllergens: (filters.excludeAllergens ?? []).slice().sort().join(','),
+  }
+}
+
+function getSafeAllergens(allergens: MenuItemWithNutrition['allergens']) {
+  return allergens ?? []
+}
+
+function escapeSearchQuery(query: string) {
+  return query.replace(/[%_,]/g, '\\$&')
+}
+
 export function useParks() {
   return useQuery({
     queryKey: ['parks'],
@@ -37,7 +61,7 @@ export function useRestaurants(parkId: string | undefined) {
 
 export function useMenuItems(restaurantId: string | undefined, filters?: Filters) {
   return useQuery({
-    queryKey: ['menuItems', restaurantId, filters],
+    queryKey: ['menuItems', restaurantId, getFiltersKey(filters)],
     queryFn: async (): Promise<MenuItemWithNutrition[]> => {
       if (!restaurantId) return []
 
@@ -70,7 +94,7 @@ export function useMenuItems(restaurantId: string | undefined, filters?: Filters
 
       if (filters?.excludeAllergens?.length) {
         items = items.filter(item =>
-          !item.allergens.some(a =>
+          !getSafeAllergens(item.allergens).some(a =>
             filters.excludeAllergens!.includes(a.allergen_type) &&
             a.severity === 'contains'
           )
@@ -107,10 +131,11 @@ export function useMenuItem(id: string | undefined) {
 
 export function useSearch(query: string, filters?: Filters) {
   return useQuery({
-    queryKey: ['search', query, filters],
+    queryKey: ['search', query, getFiltersKey(filters)],
     queryFn: async (): Promise<MenuItemWithNutrition[]> => {
       if (!query.trim()) return []
 
+      const escapedQuery = escapeSearchQuery(query.trim())
       const { data, error } = await supabase
         .from('menu_items')
         .select(`
@@ -119,7 +144,7 @@ export function useSearch(query: string, filters?: Filters) {
           allergens (*),
           restaurant:restaurants (*, park:parks (*))
         `)
-        .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
+        .or(`name.ilike.%${escapedQuery}%,description.ilike.%${escapedQuery}%`)
         .order('name')
         .limit(50)
 
@@ -137,7 +162,7 @@ export function useSearch(query: string, filters?: Filters) {
 
       if (filters?.excludeAllergens?.length) {
         items = items.filter(item =>
-          !item.allergens.some(a =>
+          !getSafeAllergens(item.allergens).some(a =>
             filters.excludeAllergens!.includes(a.allergen_type) &&
             a.severity === 'contains'
           )
