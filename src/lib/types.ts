@@ -71,9 +71,6 @@ export interface RestaurantWithMenuItems extends Restaurant {
 
 export interface Filters {
   maxCalories?: number
-  minCalories?: number
   excludeAllergens?: string[]
-  dietTags?: string[]
   category?: MenuItem['category']
-  maxPrice?: number
 }

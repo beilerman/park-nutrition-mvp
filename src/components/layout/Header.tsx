@@ -24,16 +24,21 @@ export default function Header() {
           </span>
         </Link>
 
-        <form onSubmit={handleSearch} className="flex-1 max-w-lg">
+        <form onSubmit={handleSearch} className="flex-1 max-w-lg" role="search">
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-park-slate/50">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-park-slate/50" aria-hidden="true">
               🔍
             </span>
+            <label htmlFor="global-search" className="sr-only">
+              Search menu items
+            </label>
             <input
+              id="global-search"
               type="search"
               placeholder="Search menu items..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search menu items across all parks"
               className="w-full pl-11 pr-4 py-2.5 bg-park-soft rounded-full focus:outline-none focus:ring-2 focus:ring-park-gold focus:bg-white transition-all placeholder:text-park-slate/50"
             />
           </div>

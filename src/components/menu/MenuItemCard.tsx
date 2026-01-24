@@ -5,6 +5,13 @@ import type { MenuItemWithNutrition } from '../../lib/types'
 import NutritionSummary from './NutritionSummary'
 import AllergenBadges from './AllergenBadges'
 
+function formatPrice(price: number | string | null): string | null {
+  if (price === null) return null
+  const numPrice = typeof price === 'string' ? parseFloat(price) : price
+  if (isNaN(numPrice)) return null
+  return numPrice.toFixed(2)
+}
+
 interface MenuItemCardProps {
   item: MenuItemWithNutrition
 }
@@ -40,9 +47,9 @@ export default function MenuItemCard({ item }: MenuItemCardProps) {
           <div className="mt-2">
             <AllergenBadges allergens={item.allergens} />
           </div>
-          {item.price !== null && (
+          {formatPrice(item.price) && (
             <div className="text-park-gold font-bold text-lg mt-3">
-              ${item.price.toFixed(2)}
+              ${formatPrice(item.price)}
             </div>
           )}
         </div>
