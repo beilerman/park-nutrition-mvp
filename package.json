@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "seed": "npx tsx seed/seed.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.91.1",

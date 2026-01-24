@@ -1,0 +1,134 @@
+{
+  "parks": [
+    {
+      "name": "Magic Kingdom",
+      "location": "Walt Disney World, Orlando, FL",
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Universal Studios Florida",
+      "location": "Universal Orlando Resort, Orlando, FL",
+      "timezone": "America/New_York"
+    }
+  ],
+  "restaurants": [
+    {
+      "park": "Magic Kingdom",
+      "name": "Cosmic Ray's Starlight Cafe",
+      "location_in_park": "Tomorrowland",
+      "cuisine_type": "American"
+    },
+    {
+      "park": "Magic Kingdom",
+      "name": "Pecos Bill Tall Tale Inn and Cafe",
+      "location_in_park": "Frontierland",
+      "cuisine_type": "Tex-Mex"
+    },
+    {
+      "park": "Universal Studios Florida",
+      "name": "Leaky Cauldron",
+      "location_in_park": "Diagon Alley",
+      "cuisine_type": "British"
+    }
+  ],
+  "menuItems": [
+    {
+      "restaurant": "Cosmic Ray's Starlight Cafe",
+      "name": "Angus Bacon Cheeseburger",
+      "description": "1/3 lb. Angus burger with bacon, cheese, lettuce, tomato, and pickles",
+      "price": 14.99,
+      "category": "entree",
+      "nutrition": {
+        "source": "official",
+        "calories": 850,
+        "carbs": 52,
+        "protein": 42,
+        "fat": 48,
+        "sodium": 1420,
+        "confidence_score": 95
+      },
+      "allergens": [
+        { "allergen_type": "wheat", "severity": "contains" },
+        { "allergen_type": "milk", "severity": "contains" }
+      ]
+    },
+    {
+      "restaurant": "Cosmic Ray's Starlight Cafe",
+      "name": "Chicken Nuggets",
+      "description": "Crispy chicken nuggets with fries",
+      "price": 11.99,
+      "category": "entree",
+      "nutrition": {
+        "source": "official",
+        "calories": 620,
+        "carbs": 45,
+        "protein": 28,
+        "fat": 35,
+        "sodium": 980,
+        "confidence_score": 95
+      },
+      "allergens": [
+        { "allergen_type": "wheat", "severity": "contains" }
+      ]
+    },
+    {
+      "restaurant": "Pecos Bill Tall Tale Inn and Cafe",
+      "name": "Taco Trio",
+      "description": "Three soft tacos with seasoned beef, lettuce, cheese, and salsa",
+      "price": 12.99,
+      "category": "entree",
+      "nutrition": {
+        "source": "official",
+        "calories": 680,
+        "carbs": 58,
+        "protein": 32,
+        "fat": 34,
+        "sodium": 1280,
+        "confidence_score": 90
+      },
+      "allergens": [
+        { "allergen_type": "wheat", "severity": "contains" },
+        { "allergen_type": "milk", "severity": "contains" }
+      ]
+    },
+    {
+      "restaurant": "Leaky Cauldron",
+      "name": "Fish and Chips",
+      "description": "Traditional British battered fish with chips and mushy peas",
+      "price": 16.99,
+      "category": "entree",
+      "nutrition": {
+        "source": "api_lookup",
+        "calories": 920,
+        "carbs": 78,
+        "protein": 38,
+        "fat": 52,
+        "sodium": 1560,
+        "confidence_score": 65
+      },
+      "allergens": [
+        { "allergen_type": "fish", "severity": "contains" },
+        { "allergen_type": "wheat", "severity": "contains" }
+      ]
+    },
+    {
+      "restaurant": "Leaky Cauldron",
+      "name": "Butterbeer",
+      "description": "Famous frozen or cold Butterbeer beverage",
+      "price": 8.99,
+      "category": "beverage",
+      "nutrition": {
+        "source": "crowdsourced",
+        "calories": 280,
+        "carbs": 65,
+        "sugar": 58,
+        "protein": 1,
+        "fat": 3,
+        "confidence_score": 75
+      },
+      "allergens": [
+        { "allergen_type": "milk", "severity": "contains" }
+      ]
+    }
+  ]
+}
