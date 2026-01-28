@@ -11,7 +11,7 @@ export default function ParkCard({ park }: ParkCardProps) {
   return (
     <Link
       to={`/parks/${park.id}`}
-      className="group relative block overflow-hidden rounded-2xl border border-park-soft/60 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-park-blue/8"
+      className="group relative block overflow-hidden rounded-2xl border border-park-soft/60 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-park-blue/8 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-park-gold"
     >
       {/* Hover gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-park-blue/5 via-transparent to-park-gold/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />

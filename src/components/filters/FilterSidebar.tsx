@@ -39,7 +39,7 @@ export default function FilterSidebar({ filters, onFilterChange, onClear }: Filt
   const hasActiveFilters = filters.maxCalories || (filters.excludeAllergens?.length ?? 0) > 0
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6">
+    <div className="bg-white rounded-xl shadow-md p-6" role="region" aria-label="Filter options">
       <div className="flex items-center justify-between mb-6">
         <h3 className="font-bold text-park-blue">Filters</h3>
         {hasActiveFilters && (
@@ -70,7 +70,8 @@ export default function FilterSidebar({ filters, onFilterChange, onClear }: Filt
 
       {/* Allergens Filter */}
       <div>
-        <h4 className="text-sm font-medium text-park-slate mb-3">Exclude Allergens</h4>
+        <h4 className="text-sm font-medium text-park-slate mb-1">Exclude Allergens</h4>
+        <p className="text-xs text-park-slate/50 mb-3">Hide items that contain selected allergens</p>
         <div className="space-y-2">
           {ALLERGENS.map((allergen) => {
             const isChecked = filters.excludeAllergens?.includes(allergen) ?? false

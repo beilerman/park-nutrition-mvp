@@ -11,7 +11,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
   return (
     <Link
       to={`/restaurants/${restaurant.id}`}
-      className="group block bg-white rounded-xl shadow-md p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
+      className="group block bg-white rounded-xl shadow-md p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-park-gold"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">

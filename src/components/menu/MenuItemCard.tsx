@@ -20,7 +20,7 @@ export default function MenuItemCard({ item }: MenuItemCardProps) {
   return (
     <Link
       to={`/items/${item.id}`}
-      className="group block bg-white rounded-xl shadow-md p-5 hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
+      className="group block bg-white rounded-xl shadow-md p-5 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-park-gold"
     >
       <div className="flex gap-4">
         {item.photo_url ? (
@@ -35,7 +35,7 @@ export default function MenuItemCard({ item }: MenuItemCardProps) {
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-park-blue group-hover:text-park-gold transition-colors text-lg truncate">
+          <h3 className="font-bold text-park-blue group-hover:text-park-gold transition-colors text-lg truncate" title={item.name}>
             {item.name}
           </h3>
           {item.description && (

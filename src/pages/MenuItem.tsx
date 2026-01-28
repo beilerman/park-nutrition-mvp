@@ -46,20 +46,29 @@ export default function MenuItem() {
 
   return (
     <div>
-      {/* Back Navigation */}
-      <nav className="text-sm mb-6">
-        {restaurant ? (
-          <Link
-            to={`/restaurants/${restaurant.id}`}
-            className="text-park-blue hover:text-park-gold transition-colors"
-          >
-            ← Back to {restaurant.name}
-          </Link>
-        ) : (
-          <Link to="/" className="text-park-blue hover:text-park-gold transition-colors">
-            ← Back to Parks
-          </Link>
+      {/* Breadcrumb */}
+      <nav aria-label="Breadcrumb" className="text-sm mb-6">
+        <Link to="/" className="text-park-blue hover:text-park-gold transition-colors">
+          Parks
+        </Link>
+        {restaurant?.park && (
+          <>
+            <span className="mx-2 text-park-slate/40" aria-hidden="true">/</span>
+            <Link to={`/parks/${restaurant.park.id}`} className="text-park-blue hover:text-park-gold transition-colors">
+              {restaurant.park.name}
+            </Link>
+          </>
         )}
+        {restaurant && (
+          <>
+            <span className="mx-2 text-park-slate/40" aria-hidden="true">/</span>
+            <Link to={`/restaurants/${restaurant.id}`} className="text-park-blue hover:text-park-gold transition-colors">
+              {restaurant.name}
+            </Link>
+          </>
+        )}
+        <span className="mx-2 text-park-slate/40" aria-hidden="true">/</span>
+        <span className="text-park-slate" aria-current="page">{item.name}</span>
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -97,6 +106,12 @@ export default function MenuItem() {
 
           {item.description && (
             <p className="text-park-slate text-lg leading-relaxed mb-6">{item.description}</p>
+          )}
+
+          {item.last_verified_date && (
+            <p className="text-sm text-park-slate/50 mb-6">
+              Last verified: {new Date(item.last_verified_date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
           )}
 
           {/* Allergen Section */}

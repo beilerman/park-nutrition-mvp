@@ -22,10 +22,12 @@ export default function Park() {
   return (
     <div>
       {/* Breadcrumb */}
-      <nav className="text-sm mb-6">
+      <nav aria-label="Breadcrumb" className="text-sm mb-6">
         <Link to="/" className="text-park-blue hover:text-park-gold transition-colors">
-          ← Back to Parks
+          Parks
         </Link>
+        <span className="mx-2 text-park-slate/40" aria-hidden="true">/</span>
+        <span className="text-park-slate" aria-current="page">{park?.name ?? '...'}</span>
       </nav>
 
       {/* Hero Section */}

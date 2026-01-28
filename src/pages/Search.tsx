@@ -33,9 +33,16 @@ export default function Search() {
           Search Results
         </h1>
         {query && (
-          <p className="text-white/80">
-            {isLoading ? 'Searching...' : `${results.length} results for "${query}"`}
-          </p>
+          <>
+            <p className="text-white/80">
+              {isLoading ? 'Searching...' : `${results.length}${results.length === 50 ? '+' : ''} results for "${query}"`}
+            </p>
+            {!isLoading && results.length === 50 && (
+              <p className="text-white/60 text-sm mt-1">
+                Showing first 50 results. Try a more specific search to narrow down.
+              </p>
+            )}
+          </>
         )}
       </div>
 
@@ -81,7 +88,7 @@ export default function Search() {
       ) : (
         <div className="space-y-8">
           {Object.values(groupedResults).map(({ restaurant, items }) => (
-            <div key={restaurant?.id || 'unknown'}>
+            <section key={restaurant?.id || 'unknown'} aria-label={`Results from ${restaurant?.name || 'Unknown Restaurant'}`}>
               <h2 className="text-xl font-bold text-park-blue mb-4 flex items-center gap-2">
                 <Link
                   to={restaurant ? `/restaurants/${restaurant.id}` : '#'}
@@ -100,7 +107,7 @@ export default function Search() {
                   <MenuItemCard key={item.id} item={item} />
                 ))}
               </div>
-            </div>
+            </section>
           ))}
         </div>
       )}
