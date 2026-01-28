@@ -1,29 +1,13 @@
 // src/pages/Park.tsx
 
 import { useParams, Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { supabase } from '../lib/supabase'
-import { useRestaurants } from '../lib/queries'
+import { usePark, useRestaurants } from '../lib/queries'
 import RestaurantList from '../components/restaurants/RestaurantList'
-import type { Park } from '../lib/types'
 
 export default function Park() {
   const { parkId } = useParams<{ parkId: string }>()
 
-  const { data: park } = useQuery({
-    queryKey: ['park', parkId],
-    queryFn: async (): Promise<Park | null> => {
-      if (!parkId) return null
-      const { data, error } = await supabase
-        .from('parks')
-        .select('*')
-        .eq('id', parkId)
-        .single()
-      if (error) throw error
-      return data
-    },
-    enabled: !!parkId,
-  })
+  const { data: park } = usePark(parkId)
 
   const { data: restaurants = [], isLoading, error } = useRestaurants(parkId)
 

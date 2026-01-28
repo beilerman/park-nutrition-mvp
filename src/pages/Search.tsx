@@ -1,8 +1,11 @@
 // src/pages/Search.tsx
 
+import { useMemo } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { useSearch } from '../lib/queries'
 import MenuItemCard from '../components/menu/MenuItemCard'
+
+type RestaurantRef = { id: string; name: string; park?: { name: string } } | undefined
 
 export default function Search() {
   const [searchParams] = useSearchParams()
@@ -10,19 +13,17 @@ export default function Search() {
 
   const { data: results = [], isLoading, error } = useSearch(query)
 
-  // Group results by restaurant
-  const groupedResults = results.reduce((acc, item) => {
-    const restaurant = item.restaurant as { id: string; name: string; park?: { name: string } } | undefined
-    const key = restaurant?.id || 'unknown'
-    if (!acc[key]) {
-      acc[key] = {
-        restaurant,
-        items: [],
+  const groupedResults = useMemo(() => {
+    return results.reduce((acc, item) => {
+      const restaurant = item.restaurant as RestaurantRef
+      const key = restaurant?.id || 'unknown'
+      if (!acc[key]) {
+        acc[key] = { restaurant, items: [] }
       }
-    }
-    acc[key].items.push(item)
-    return acc
-  }, {} as Record<string, { restaurant: { id: string; name: string; park?: { name: string } } | undefined; items: typeof results }>)
+      acc[key].items.push(item)
+      return acc
+    }, {} as Record<string, { restaurant: RestaurantRef; items: typeof results }>)
+  }, [results])
 
   return (
     <div>

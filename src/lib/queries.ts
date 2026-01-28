@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from './supabase'
 import type { Park, Restaurant, MenuItemWithNutrition, Filters } from './types'
 import {
+  validatePark,
   validateParks,
   validateRestaurants,
   validateRestaurant,
@@ -27,8 +28,29 @@ function getFiltersKey(filters?: Filters) {
   }
 }
 
-function getSafeAllergens(allergens: MenuItemWithNutrition['allergens']) {
-  return allergens ?? []
+function applyClientFilters(items: MenuItemWithNutrition[], filters?: Filters): MenuItemWithNutrition[] {
+  if (!filters) return items
+
+  let result = items
+
+  if (filters.maxCalories !== undefined) {
+    result = result.filter(item =>
+      item.nutritional_data &&
+      item.nutritional_data.calories !== null &&
+      item.nutritional_data.calories <= filters.maxCalories!
+    )
+  }
+
+  if (filters.excludeAllergens?.length) {
+    result = result.filter(item =>
+      !(item.allergens ?? []).some(a =>
+        filters.excludeAllergens!.includes(a.allergen_type) &&
+        a.severity === 'contains'
+      )
+    )
+  }
+
+  return result
 }
 
 function escapeSearchQuery(query: string): string {
@@ -53,6 +75,23 @@ export function useParks() {
       if (error) throw error
       return validateParks(data)
     },
+  })
+}
+
+export function usePark(parkId: string | undefined) {
+  return useQuery({
+    queryKey: ['park', parkId],
+    queryFn: async (): Promise<Park | null> => {
+      if (!parkId) return null
+      const { data, error } = await supabase
+        .from('parks')
+        .select('*')
+        .eq('id', parkId)
+        .single()
+      if (error) throw error
+      return validatePark(data)
+    },
+    enabled: !!parkId,
   })
 }
 
@@ -119,27 +158,7 @@ export function useMenuItems(restaurantId: string | undefined, filters?: Filters
       const { data, error } = await query.order('name')
       if (error) throw error
 
-      // Validate and filter
-      let items = validateMenuItems(data)
-
-      if (filters?.maxCalories !== undefined) {
-        items = items.filter(item =>
-          item.nutritional_data &&
-          item.nutritional_data.calories !== null &&
-          item.nutritional_data.calories <= filters.maxCalories!
-        )
-      }
-
-      if (filters?.excludeAllergens?.length) {
-        items = items.filter(item =>
-          !getSafeAllergens(item.allergens).some(a =>
-            filters.excludeAllergens!.includes(a.allergen_type) &&
-            a.severity === 'contains'
-          )
-        )
-      }
-
-      return items
+      return applyClientFilters(validateMenuItems(data), filters)
     },
     enabled: !!restaurantId,
   })
@@ -188,26 +207,7 @@ export function useSearch(query: string, filters?: Filters) {
 
       if (error) throw error
 
-      let items = validateMenuItems(data)
-
-      if (filters?.maxCalories !== undefined) {
-        items = items.filter(item =>
-          item.nutritional_data &&
-          item.nutritional_data.calories !== null &&
-          item.nutritional_data.calories <= filters.maxCalories!
-        )
-      }
-
-      if (filters?.excludeAllergens?.length) {
-        items = items.filter(item =>
-          !getSafeAllergens(item.allergens).some(a =>
-            filters.excludeAllergens!.includes(a.allergen_type) &&
-            a.severity === 'contains'
-          )
-        )
-      }
-
-      return items
+      return applyClientFilters(validateMenuItems(data), filters)
     },
     enabled: query.trim().length > 0,
   })
@@ -222,24 +222,18 @@ export function useStats() {
   return useQuery({
     queryKey: ['stats'],
     queryFn: async (): Promise<Stats> => {
-      // Get menu items count
-      const { count: menuItemCount, error: menuError } = await supabase
-        .from('menu_items')
-        .select('*', { count: 'exact', head: true })
+      const [menuResult, allergenResult] = await Promise.all([
+        supabase.from('menu_items').select('*', { count: 'exact', head: true }),
+        supabase.from('allergens').select('allergen_type'),
+      ])
 
-      if (menuError) throw menuError
+      if (menuResult.error) throw menuResult.error
+      if (allergenResult.error) throw allergenResult.error
 
-      // Get distinct allergen types count
-      const { data: allergenData, error: allergenError } = await supabase
-        .from('allergens')
-        .select('allergen_type')
-
-      if (allergenError) throw allergenError
-
-      const uniqueAllergens = new Set(allergenData?.map(a => a.allergen_type) ?? [])
+      const uniqueAllergens = new Set(allergenResult.data?.map(a => a.allergen_type) ?? [])
 
       return {
-        menuItemCount: menuItemCount ?? 0,
+        menuItemCount: menuResult.count ?? 0,
         allergenTypesCount: uniqueAllergens.size,
       }
     },

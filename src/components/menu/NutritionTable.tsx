@@ -32,7 +32,7 @@ export default function NutritionTable({ nutrition }: NutritionTableProps) {
           )}
         </div>
         <div className="text-sm text-park-slate/60 mt-1 capitalize">
-          Source: {nutrition.source.replace('_', ' ')}
+          Source: {nutrition.source.replaceAll('_', ' ')}
         </div>
       </div>
 

@@ -47,11 +47,14 @@ export default function MenuItemCard({ item }: MenuItemCardProps) {
           <div className="mt-2">
             <AllergenBadges allergens={item.allergens} />
           </div>
-          {formatPrice(item.price) && (
-            <div className="text-park-gold font-bold text-lg mt-3">
-              ${formatPrice(item.price)}
-            </div>
-          )}
+          {(() => {
+            const price = formatPrice(item.price)
+            return price ? (
+              <div className="text-park-gold font-bold text-lg mt-3">
+                ${price}
+              </div>
+            ) : null
+          })()}
         </div>
       </div>
     </Link>

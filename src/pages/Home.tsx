@@ -1,5 +1,6 @@
 // src/pages/Home.tsx
 
+import { Link } from 'react-router-dom'
 import { useParks, useStats } from '../lib/queries'
 import ParkList from '../components/parks/ParkList'
 
@@ -40,12 +41,12 @@ export default function Home() {
               Explore restaurants, compare menu items, and build a day of magical meals with clarity and confidence.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href="/search"
+              <Link
+                to="/search"
                 className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-park-blue shadow-lg shadow-white/25 transition hover:-translate-y-0.5 hover:bg-park-cream"
               >
                 Start searching
-              </a>
+              </Link>
               <a
                 href="#parks"
                 className="rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/15"
