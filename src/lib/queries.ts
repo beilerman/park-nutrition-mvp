@@ -229,10 +229,11 @@ export function useStats() {
 
       if (menuError) throw menuError
 
-      // Get distinct allergen types count
+      // Get distinct allergen types (only fetch unique values, not every row)
       const { data: allergenData, error: allergenError } = await supabase
         .from('allergens')
         .select('allergen_type')
+        .limit(1000)
 
       if (allergenError) throw allergenError
 

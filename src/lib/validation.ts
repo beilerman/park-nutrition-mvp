@@ -97,14 +97,14 @@ export function validateMenuItem(data: unknown): MenuItemWithNutrition {
   }
 
   // Handle price - Supabase returns DECIMAL as string
+  // Avoid mutating the original object (may be in React Query's cache)
   const price = data.price
-  if (price !== null && typeof price === 'string') {
-    data.price = parseFloat(price)
-  }
+  const parsedPrice = (price !== null && typeof price === 'string') ? parseFloat(price) : price
 
   // Validate nested relations
   const result = {
     ...data,
+    price: parsedPrice,
     nutritional_data: validateNutritionalData(data.nutritional_data),
     allergens: validateAllergens(data.allergens),
   } as MenuItemWithNutrition

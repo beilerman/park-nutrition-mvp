@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
 import { useRestaurants } from '../lib/queries'
+import { validatePark } from '../lib/validation'
 import RestaurantList from '../components/restaurants/RestaurantList'
 import type { Park } from '../lib/types'
 
@@ -20,7 +21,7 @@ export default function Park() {
         .eq('id', parkId)
         .single()
       if (error) throw error
-      return data
+      return validatePark(data)
     },
     enabled: !!parkId,
   })
