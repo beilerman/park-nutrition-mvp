@@ -17,16 +17,16 @@ export default function AllergenBadges({ allergens }: AllergenBadgesProps) {
       {contains.map((a) => (
         <span
           key={a.id}
-          className="inline-flex items-center gap-1 px-2 py-0.5 bg-park-red/10 text-park-red font-medium rounded-full"
+          className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-park-red/10 text-park-red font-medium rounded-full border border-park-red/20"
         >
-          <span className="text-xs">⚠️</span>
+          <span className="text-xs">&#9888;</span>
           {a.allergen_type}
         </span>
       ))}
       {mayContain.map((a) => (
         <span
           key={a.id}
-          className="inline-flex items-center gap-1 px-2 py-0.5 bg-park-orange/10 text-park-orange font-medium rounded-full"
+          className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-park-orange/10 text-park-orange font-medium rounded-full border border-park-orange/20"
         >
           {a.allergen_type}
         </span>

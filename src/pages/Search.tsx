@@ -27,20 +27,22 @@ export default function Search() {
   return (
     <div>
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-park-blue to-park-blue/80 rounded-2xl p-8 mb-8 text-white">
-        <h1 className="text-3xl font-bold mb-2">
+      <div className="relative overflow-hidden bg-gradient-to-br from-park-blue via-park-purple to-park-blue rounded-2xl p-8 mb-8 text-white">
+        <div className="absolute top-4 right-8 text-park-gold/30 text-xl animate-twinkle">&#10022;</div>
+        <div className="absolute bottom-3 left-[30%] text-park-gold/20 text-sm animate-twinkle" style={{ animationDelay: '0.7s' }}>&#10022;</div>
+        <h1 className="text-3xl font-bold mb-2 relative" style={{ fontFamily: 'var(--font-display)' }}>
           Search Results
         </h1>
         {query && (
-          <p className="text-white/80">
-            {isLoading ? 'Searching...' : `${results.length} results for "${query}"`}
+          <p className="text-white/80 relative">
+            {isLoading ? 'Searching the magic...' : `${results.length} results for "${query}"`}
           </p>
         )}
       </div>
 
       {!query ? (
-        <div className="bg-park-soft rounded-xl p-8 text-center">
-          <span className="text-4xl mb-3 block">🔍</span>
+        <div className="bg-park-soft/50 rounded-2xl p-8 text-center border border-park-purple/10">
+          <span className="text-4xl mb-3 block">&#10022;</span>
           <p className="text-park-slate/70">Enter a search term to find menu items.</p>
         </div>
       ) : isLoading ? (
@@ -50,9 +52,9 @@ export default function Search() {
               <div className="h-7 bg-park-soft rounded w-48 mb-4" />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {[1, 2].map((j) => (
-                  <div key={j} className="bg-white rounded-xl shadow-md p-5 animate-pulse">
+                  <div key={j} className="bg-white/90 rounded-2xl border border-park-purple/10 shadow-md p-5 animate-pulse">
                     <div className="flex gap-4">
-                      <div className="w-24 h-24 bg-park-soft rounded-lg" />
+                      <div className="w-24 h-24 bg-park-soft rounded-xl" />
                       <div className="flex-1">
                         <div className="h-5 bg-park-soft rounded w-3/4 mb-2" />
                         <div className="h-4 bg-park-soft rounded w-full mb-2" />
@@ -70,10 +72,10 @@ export default function Search() {
           Error: {error.message}
         </div>
       ) : results.length === 0 ? (
-        <div className="bg-park-soft rounded-xl p-8 text-center">
-          <span className="text-4xl mb-3 block">😕</span>
+        <div className="bg-park-soft/50 rounded-2xl p-8 text-center border border-park-purple/10">
+          <span className="text-4xl mb-3 block">&#10022;</span>
           <p className="text-park-slate/70 mb-2">No items found matching "{query}".</p>
-          <Link to="/" className="text-park-blue hover:text-park-gold transition-colors font-medium">
+          <Link to="/" className="text-park-purple hover:text-park-gold transition-colors font-medium">
             Browse all parks
           </Link>
         </div>
@@ -81,10 +83,10 @@ export default function Search() {
         <div className="space-y-8">
           {Object.values(groupedResults).map(({ restaurant, items }) => (
             <div key={restaurant?.id || 'unknown'}>
-              <h2 className="text-xl font-bold text-park-blue mb-4 flex items-center gap-2">
+              <h2 className="text-xl font-bold text-park-blue mb-4 flex items-center gap-2" style={{ fontFamily: 'var(--font-display)' }}>
                 <Link
                   to={restaurant ? `/restaurants/${restaurant.id}` : '#'}
-                  className="hover:text-park-gold transition-colors"
+                  className="hover:text-park-purple transition-colors"
                 >
                   {restaurant?.name || 'Unknown Restaurant'}
                 </Link>
