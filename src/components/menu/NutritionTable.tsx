@@ -20,11 +20,14 @@ const NUTRIENTS: Array<{ key: string; label: string; unit: string; highlight?: b
 
 export default function NutritionTable({ nutrition }: NutritionTableProps) {
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden">
+    <div className="bg-white/90 backdrop-blur rounded-2xl shadow-md overflow-hidden border border-park-purple/10">
       {/* Header */}
-      <div className="bg-park-soft px-6 py-4">
+      <div className="bg-gradient-to-r from-park-purple/10 to-park-soft px-6 py-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold text-park-blue">Nutrition Facts</h3>
+          <h3 className="text-lg font-bold text-park-blue flex items-center gap-2" style={{ fontFamily: 'var(--font-display)' }}>
+            <span className="text-park-gold text-sm">&#10022;</span>
+            Nutrition Facts
+          </h3>
           {nutrition.confidence_score < 70 && (
             <span className="text-sm text-park-orange bg-park-orange/10 px-3 py-1 rounded-full font-medium">
               Estimated
@@ -37,14 +40,14 @@ export default function NutritionTable({ nutrition }: NutritionTableProps) {
       </div>
 
       {/* Confidence Bar */}
-      <div className="px-6 py-3 border-b border-park-soft">
+      <div className="px-6 py-3 border-b border-park-purple/10">
         <div className="flex items-center justify-between text-sm mb-1">
           <span className="text-park-slate/70">Data Confidence</span>
-          <span className="font-medium text-park-blue">{nutrition.confidence_score}%</span>
+          <span className="font-medium text-park-purple">{nutrition.confidence_score}%</span>
         </div>
         <div className="h-2 bg-park-soft rounded-full overflow-hidden">
           <div
-            className="h-full bg-park-gold rounded-full transition-all"
+            className="h-full bg-gradient-to-r from-park-purple to-park-gold rounded-full transition-all"
             style={{ width: `${nutrition.confidence_score}%` }}
           />
         </div>
@@ -64,7 +67,7 @@ export default function NutritionTable({ nutrition }: NutritionTableProps) {
                 <td className={`px-6 py-3 text-park-slate ${highlight ? 'font-medium' : ''}`}>
                   {label}
                 </td>
-                <td className={`px-6 py-3 text-right ${highlight ? 'font-bold text-park-blue' : 'font-medium text-park-slate'}`}>
+                <td className={`px-6 py-3 text-right ${highlight ? 'font-bold text-park-purple' : 'font-medium text-park-slate'}`}>
                   {value}{unit}
                 </td>
               </tr>

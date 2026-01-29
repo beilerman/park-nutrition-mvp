@@ -39,18 +39,20 @@ export default function Park() {
     <div>
       {/* Breadcrumb */}
       <nav className="text-sm mb-6">
-        <Link to="/" className="text-park-blue hover:text-park-gold transition-colors">
-          ← Back to Parks
+        <Link to="/" className="text-park-purple hover:text-park-gold transition-colors font-medium">
+          &larr; Back to Parks
         </Link>
       </nav>
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-park-blue to-park-blue/80 rounded-2xl p-8 mb-8 text-white">
-        <h1 className="text-3xl font-bold mb-2">
+      <div className="relative overflow-hidden bg-gradient-to-br from-park-blue via-park-purple to-park-blue rounded-2xl p-8 mb-8 text-white">
+        <div className="absolute top-4 right-6 text-park-gold/30 text-xl animate-twinkle">&#10022;</div>
+        <div className="absolute bottom-3 left-[20%] text-park-gold/20 text-sm animate-twinkle" style={{ animationDelay: '0.7s' }}>&#10022;</div>
+        <h1 className="text-3xl font-bold mb-2 relative" style={{ fontFamily: 'var(--font-display)' }}>
           {park?.name ?? 'Loading...'}
         </h1>
         {park?.location && (
-          <p className="text-white/80 flex items-center gap-2">
+          <p className="text-white/80 flex items-center gap-2 relative">
             <span>📍</span>
             {park.location}
           </p>
@@ -58,7 +60,10 @@ export default function Park() {
       </div>
 
       {/* Restaurants Section */}
-      <h2 className="text-2xl font-bold text-park-blue mb-6">Restaurants</h2>
+      <h2 className="text-2xl font-bold text-park-blue mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-display)' }}>
+        <span className="text-park-gold text-sm">&#10022;</span>
+        Restaurants
+      </h2>
       <RestaurantList restaurants={restaurants} isLoading={isLoading} />
     </div>
   )

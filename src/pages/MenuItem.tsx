@@ -35,7 +35,7 @@ export default function MenuItem() {
 
   if (!item) {
     return (
-      <div className="bg-park-soft rounded-xl p-8 text-center">
+      <div className="bg-park-soft rounded-2xl p-8 text-center">
         <span className="text-4xl mb-3 block">🍽️</span>
         <p className="text-park-slate/70">Item not found.</p>
       </div>
@@ -51,13 +51,13 @@ export default function MenuItem() {
         {restaurant ? (
           <Link
             to={`/restaurants/${restaurant.id}`}
-            className="text-park-blue hover:text-park-gold transition-colors"
+            className="text-park-purple hover:text-park-gold transition-colors font-medium"
           >
-            ← Back to {restaurant.name}
+            &larr; Back to {restaurant.name}
           </Link>
         ) : (
-          <Link to="/" className="text-park-blue hover:text-park-gold transition-colors">
-            ← Back to Parks
+          <Link to="/" className="text-park-purple hover:text-park-gold transition-colors font-medium">
+            &larr; Back to Parks
           </Link>
         )}
       </nav>
@@ -69,23 +69,23 @@ export default function MenuItem() {
             <img
               src={item.photo_url}
               alt={item.name}
-              className="w-full max-w-md rounded-xl shadow-lg mb-6"
+              className="w-full max-w-md rounded-2xl shadow-lg mb-6 border border-park-purple/10"
             />
           ) : (
-            <div className="w-full max-w-md h-48 bg-park-soft rounded-xl flex items-center justify-center text-6xl mb-6">
+            <div className="w-full max-w-md h-48 bg-gradient-to-br from-park-soft to-park-purple/10 rounded-2xl flex items-center justify-center text-6xl mb-6">
               🍽️
             </div>
           )}
 
-          <h1 className="text-3xl font-bold text-park-blue mb-4">{item.name}</h1>
+          <h1 className="text-3xl font-bold text-park-blue mb-4" style={{ fontFamily: 'var(--font-display)' }}>{item.name}</h1>
 
           <div className="flex items-center gap-3 mb-4 flex-wrap">
-            <span className="inline-block px-4 py-1.5 bg-park-soft text-park-blue text-sm font-medium rounded-full capitalize">
+            <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-park-purple/10 to-park-soft text-park-purple text-sm font-medium rounded-full capitalize">
               {item.category}
             </span>
             {item.is_seasonal && (
-              <span className="inline-block px-4 py-1.5 bg-park-orange/10 text-park-orange text-sm font-medium rounded-full">
-                Seasonal
+              <span className="inline-block px-4 py-1.5 bg-park-gold/10 text-park-gold text-sm font-medium rounded-full border border-park-gold/20">
+                &#10022; Seasonal
               </span>
             )}
             {item.price !== null && (
@@ -101,9 +101,9 @@ export default function MenuItem() {
 
           {/* Allergen Section */}
           {item.allergens.length > 0 && (
-            <div className="bg-park-red/5 border border-park-red/20 rounded-xl p-6">
+            <div className="bg-park-red/5 border border-park-red/20 rounded-2xl p-6">
               <h3 className="font-bold text-park-red mb-3 flex items-center gap-2">
-                <span>⚠️</span>
+                <span>&#9888;</span>
                 Allergen Information
               </h3>
               <AllergenBadges allergens={item.allergens} />
@@ -116,8 +116,8 @@ export default function MenuItem() {
           {item.nutritional_data ? (
             <NutritionTable nutrition={item.nutritional_data} />
           ) : (
-            <div className="bg-park-soft rounded-xl p-6 text-center">
-              <span className="text-3xl mb-2 block">📊</span>
+            <div className="bg-park-soft rounded-2xl p-6 text-center">
+              <span className="text-3xl mb-2 block">&#10022;</span>
               <p className="text-park-slate/70">No nutrition data available for this item.</p>
             </div>
           )}

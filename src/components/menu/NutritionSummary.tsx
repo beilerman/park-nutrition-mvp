@@ -22,7 +22,7 @@ export default function NutritionSummary({ nutrition, showConfidence }: Nutritio
 
   return (
     <div className="flex items-center gap-2 flex-wrap">
-      <span className="inline-block px-3 py-1 bg-park-soft text-park-blue text-sm font-medium rounded-full">
+      <span className="inline-block px-3 py-1 bg-gradient-to-r from-park-purple/10 to-park-soft text-park-purple text-sm font-medium rounded-full">
         {parts.join(' · ')}
       </span>
       {showConfidence && nutrition.confidence_score < 70 && (

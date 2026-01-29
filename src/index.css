@@ -1,16 +1,88 @@
 @import "tailwindcss";
 
 @theme {
-  --color-park-blue: #1e3a5f;
-  --color-park-gold: #f5a623;
-  --color-park-red: #d64545;
-  --color-park-cream: #faf8f5;
-  --color-park-soft: #e8f0f8;
-  --color-park-slate: #2d3748;
+  --color-park-blue: #1a1a4e;
+  --color-park-gold: #d4a843;
+  --color-park-red: #c0392b;
+  --color-park-cream: #fdf8f0;
+  --color-park-soft: #ede4f5;
+  --color-park-slate: #2c2c44;
   --color-park-orange: #e67e22;
+  --color-park-purple: #6c3fa0;
+  --color-park-pink: #e8a0bf;
+  --color-park-teal: #3db8a0;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Nunito', system-ui, sans-serif;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes castle-glow {
+  0%, 100% { text-shadow: 0 0 8px rgba(212, 168, 67, 0.4); }
+  50% { text-shadow: 0 0 16px rgba(212, 168, 67, 0.8), 0 0 32px rgba(108, 63, 160, 0.3); }
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+.animate-twinkle {
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.animate-castle-glow {
+  animation: castle-glow 3s ease-in-out infinite;
 }
 
 body {
   background-color: var(--color-park-cream);
+  color: var(--color-park-slate);
+  font-family: var(--font-sans);
+}
+
+/* Magical scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-park-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-park-purple), var(--color-park-gold));
+  border-radius: 4px;
+}
+
+::selection {
+  background: rgba(108, 63, 160, 0.25);
   color: var(--color-park-slate);
 }
