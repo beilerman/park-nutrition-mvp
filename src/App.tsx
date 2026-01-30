@@ -11,7 +11,7 @@ import Search from './pages/Search'
 
 function App() {
   return (
-    <BrowserRouter basename="/park-nutrition-mvp">
+    <BrowserRouter>
       <Layout>
         <ErrorBoundary>
           <Routes>
